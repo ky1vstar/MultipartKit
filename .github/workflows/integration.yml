@@ -20,7 +20,6 @@ jobs:
     steps:
 
     - uses: actions/checkout@v2
-    "${{ job.status == 'success' && 'good' || 'danger' }}"
 
     - name: Setup environment
       run: echo "LIB_VERSION=${{ github.event_name == 'workflow_dispatch' && ${{ github.event.inputs.lib_version }} || $(git describe --tags `git rev-list --tags --max-count=1`) }}" >> $GITHUB_ENV
