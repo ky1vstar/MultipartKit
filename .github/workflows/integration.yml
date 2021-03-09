@@ -24,7 +24,7 @@ jobs:
     - name: Setup environment
       run: |
         export DISPATCH_VERSION=${{ github.event.inputs.lib_version }}"
-        echo "LIB_VERSION=${{ github.event_name == 'workflow_dispatch' && $DISPATCH_VERSION || $(git describe --tags `git rev-list --tags --max-count=1`) }}" >> $GITHUB_ENV
+        echo "LIB_VERSION=${{ github.event_name == 'workflow_dispatch' && \$DISPATCH_VERSION || \$(git describe --tags `git rev-list --tags --max-count=1`) }}" >> $GITHUB_ENV
 
     - name: Temp
       run: echo $LIB_VERSION
