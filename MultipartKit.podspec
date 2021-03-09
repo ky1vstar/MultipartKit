@@ -11,10 +11,15 @@ Pod::Spec.new do |s|
     s.requires_arc      = true
     s.platforms         = { :ios => "10.0", :osx => "10.10", :tvos => "10.0", :watchos => "6.0" }
     
-    s.dependency          "SwiftNIO", "~> 2.2.0"
-    s.dependency          "SwiftNIOHTTP1", "~> 2.2.0"
+    s.dependency          "SwiftNIO", "~> 2.26.0"
+    s.dependency          "SwiftNIOHTTP1", "~> 2.26.0"
     s.dependency          "CMultipartParser", "= #{s.version.to_s}"
     
     s.frameworks        = ["Foundation"]
     s.source_files      = "Sources/MultipartKit/**/*.swift"
+
+	s.test_spec 'Tests' do |test_spec|
+		test_spec.platforms = { :ios => "10.0", :osx => "10.10", :tvos => "10.0" }
+		test_spec.source_files = 'Tests/MultipartKitTests/*.swift'
+	end
 end
