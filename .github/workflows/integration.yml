@@ -20,8 +20,8 @@ jobs:
 
     - name: Copy podspecs
       run: |
-        cp ../CMultipartParser.podspec multipart-kit
-        cp ../MultipartKit.podspec multipart-kit
+        cp CMultipartParser.podspec multipart-kit
+        cp MultipartKit.podspec multipart-kit
 
     - name: Lint CMultipartParser
       working-directory: ./multipart-kit
