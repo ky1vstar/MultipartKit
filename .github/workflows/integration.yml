@@ -5,15 +5,32 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  release:
+    types:
+        - created
+  workflow_dispatch:
+    inputs:
+      lib_version:
+        description: 'Version tag'
+        required: true
     
 jobs:
   lint:
     runs-on: macOS-latest
     steps:
+
     - uses: actions/checkout@v2
 
     - name: Setup environment
+      if: ${{ github.event_name == 'workflow_dispatch' }}
+      run: export LIB_VERSION=${{ github.event.inputs.lib_version }}
+
+    - name: Setup environment
+      if: ${{ github.event_name != 'workflow_dispatch' }}
       run: export LIB_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
+
+    - name: Temp
+      run: echo $LIB_VERSION
 
     - name: Clone multipart-kit
       run: git clone $LIB_VERSION --depth 1 https://github.com/vapor/multipart-kit.git multipart-kit
@@ -25,8 +42,29 @@ jobs:
 
     - name: Lint CMultipartParser
       working-directory: ./multipart-kit
-      run: pod lib lint CMultipartParser.podspec --allow-warnings
+      run: pod lib lint CMultipartParser.podspec --allow-warnings --platforms="ios"
 
     - name: Lint MultipartKit
       working-directory: ./multipart-kit
-      run: pod lib lint MultipartKit.podspec --allow-warnings --include-podspecs=CMultipartParser.podspec
+      run: pod lib lint MultipartKit.podspec --allow-warnings --platforms="ios" --include-podspecs=CMultipartParser.podspec
+
+  publish:
+    runs-on: macOS-latest
+    needs: lint
+    if: ${{ github.event_name == 'release' }}
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Setup environment
+      run: export LIB_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
+
+    - name: Publish CMultipartParser
+      env:
+        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+      pod trunk push CMultipartParser.podspec --allow-warnings
+
+    - name: Publish MultipartKit
+      env:
+        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+      pod trunk push MultipartKit.podspec --allow-warnings
