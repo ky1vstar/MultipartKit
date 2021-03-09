@@ -1,0 +1,32 @@
+name: Integration
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    
+jobs:
+  lint:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup environment
+      run: export LIB_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
+
+    - name: Clone multipart-kit
+      run: git clone $LIB_VERSION --depth 1 https://github.com/vapor/multipart-kit.git multipart-kit
+
+    - name: Copy podspecs
+      run: |
+        cp ../CMultipartParser.podspec multipart-kit
+        cp ../MultipartKit.podspec multipart-kit
+
+    - name: Lint CMultipartParser
+      working-directory: ./multipart-kit
+      run: pod lib lint CMultipartParser.podspec --allow-warnings
+
+    - name: Lint MultipartKit
+      working-directory: ./multipart-kit
+      run: pod lib lint MultipartKit.podspec --allow-warnings --include-podspecs=CMultipartParser.podspec
