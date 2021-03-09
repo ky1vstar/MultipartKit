@@ -62,9 +62,9 @@ jobs:
     - name: Publish CMultipartParser
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-      pod trunk push CMultipartParser.podspec --allow-warnings
+      run: pod trunk push CMultipartParser.podspec --allow-warnings
 
     - name: Publish MultipartKit
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-      pod trunk push MultipartKit.podspec --allow-warnings
+      run: pod trunk push MultipartKit.podspec --allow-warnings
