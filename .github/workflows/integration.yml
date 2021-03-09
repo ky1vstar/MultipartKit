@@ -31,7 +31,7 @@ jobs:
       run: echo $LIB_VERSION
 
     - name: Clone multipart-kit
-      run: git clone $LIB_VERSION --depth 1 https://github.com/vapor/multipart-kit.git multipart-kit
+      run: git clone --branch $LIB_VERSION --depth 1 https://github.com/vapor/multipart-kit.git multipart-kit
 
     - name: Copy podspecs
       run: |
