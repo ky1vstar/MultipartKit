@@ -53,12 +53,14 @@ jobs:
     
     - name: Publish CMultipartParser
       env:
-        LIB_VERSION: $(git describe --tags `git rev-list --tags --max-count=1`)
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-      run: pod trunk push CMultipartParser.podspec --allow-warnings
+      run: |
+        export LIB_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
+        pod trunk push CMultipartParser.podspec --allow-warnings
 
     - name: Publish MultipartKit
       env:
-        LIB_VERSION: $(git describe --tags `git rev-list --tags --max-count=1`)
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-      run: pod trunk push MultipartKit.podspec --allow-warnings
+      run: |
+        export LIB_VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
+        pod trunk push MultipartKit.podspec --allow-warnings
